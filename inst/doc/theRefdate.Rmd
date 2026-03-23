@@ -1,0 +1,78 @@
+---
+title: "Introduction to theRefdate"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to theRefdate}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+library(theRefdate)
+```
+
+## Overview & Motto
+
+`theRefdate` provides simple date manipulation functions operating on character
+strings in the format `"DD.MM.YYYY"`. All functions follow this `"LP"`-flavour
+convention on formatting dates.
+
+simple and fast.
+
+## flavour
+
+Returns the flavour identifier of this package:
+
+```{r}
+flavour()
+```
+
+## jahr
+
+Extracts the year as a numeric value:
+
+```{r}
+jahr("02.02.2002")
+```
+
+## monat
+
+Extracts the month as a numeric value:
+
+```{r}
+monat("14.06.1789")
+```
+
+## tag
+
+Extracts the day as a numeric value:
+
+```{r}
+tag("03.02.2000")
+```
+
+## dateDiff
+
+Computes the difference between two dates. Returns a list with four elements:
+`diffJ` (years), `diffM` (months), `diffDauer` (duration as fraction of years),
+`diffDauerM` (total months):
+
+```{r}
+result <- dateDiff("01.12.1999", "01.01.2000")
+result$diffJ
+result$diffM
+result$diffDauer
+result$diffDauerM
+```
+
+## dateAddMonths
+
+Adds or subtracts months from a date:
+
+```{r}
+dateAddMonths("01.01.2000",   1)   # add 1 month
+dateAddMonths("01.01.2000",  -1)   # subtract 1 month
+dateAddMonths("01.01.2000",  12)   # add 1 year
+dateAddMonths("01.01.2000", -13)   # subtract 13 months
+```
