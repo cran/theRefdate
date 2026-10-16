@@ -7,11 +7,13 @@
 flavour()
 }
 \value{
-character string, either \code{"LP"} or \code{"VK"}
+character string: \code{"dmy"} (DD.MM.YYYY), \code{"iso"} (YYYY-MM-DD) or
+\code{"iso_basic"} (YYYYMMDD). The default is \code{"dmy"}. Version 1.0.0 returned
+\code{"LP"} for this format.
 }
 \description{
-Gibt den Flavour (Auspraegung) des Packages theRefdate zurueck.
+Returns the active flavour (date format) of the package theRefdate.
 }
 \examples{
-flavour() == "LP"
+flavour() == "dmy"
 }

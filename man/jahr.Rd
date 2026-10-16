@@ -2,18 +2,23 @@
 % Please edit documentation in R/theRefdate.R
 \name{jahr}
 \alias{jahr}
-\title{Funktion 'jahr'}
+\title{Function 'jahr'}
 \usage{
-jahr(datumstring = NA_character_)
+jahr(datumstring, format = .zustand$name)
 }
 \arguments{
-\item{datumstring}{Datumsstring im Format "TT.MM.JJJJ"}
+\item{datumstring}{date string in the format of the flavour (default "DD.MM.YYYY")}
+
+\item{format}{flavour; the default is the one set with \code{\link{setFlavour}}}
 }
 \value{
 numeric
 }
 \description{
-Extrahiert die Jahreszahl aus uebergebenem Datumsstring als 'numeric'
+Extracts the year from a date string as 'numeric'.
+}
+\details{
+Invalid input, including \code{NA} and the empty string, is an error (version 1.0.0 returned \code{NA}).
 }
 \examples{
 jahr("02.02.2002") == 2002

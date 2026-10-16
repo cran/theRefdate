@@ -1,5 +1,5 @@
 test_that("flavour works", {
-  expect_equal(flavour(), "LP")
+  expect_equal(flavour(), "dmy")
 })
 
 

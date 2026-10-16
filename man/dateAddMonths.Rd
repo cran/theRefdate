@@ -4,18 +4,23 @@
 \alias{dateAddMonths}
 \title{dateAddMonths}
 \usage{
-dateAddMonths(termin = NA_character_, monthsToBeAdded = NA_real_)
+dateAddMonths(termin, monthsToBeAdded, format = .zustand$name)
 }
 \arguments{
-\item{termin}{Ausgangstermin im Format "TT.MM.JJJJ"}
+\item{termin}{start date in the format of the flavour}
 
-\item{monthsToBeAdded}{Anzahl Monate (positiv: addieren, negativ: subtrahieren)}
+\item{monthsToBeAdded}{number of whole months (positive: add, negative: subtract)}
+
+\item{format}{flavour; the default is the one set with \code{\link{setFlavour}}}
 }
 \value{
-Termin im Format "TT.MM.JJJJ"
+date in the format of the flavour
 }
 \description{
-Addiert oder subtrahiert eine Anzahl Monate zu einem Termin im Format "TT.MM.JJJJ".
+Adds or subtracts a number of whole months to or from a date. The day is left unchanged.
+}
+\details{
+Invalid input, including \code{NA} and the empty string, is an error (version 1.0.0 returned \code{NA}).
 }
 \examples{
 dateAddMonths("01.01.2000", -3 ) == "01.10.1999"

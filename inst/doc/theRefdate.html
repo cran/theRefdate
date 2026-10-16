@@ -341,37 +341,97 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
-<div id="overview-motto" class="section level2">
-<h2>Overview &amp; Motto</h2>
-<p><code>theRefdate</code> provides simple date manipulation functions
-operating on character strings in the format <code>&quot;DD.MM.YYYY&quot;</code>.
-All functions follow this <code>&quot;LP&quot;</code>-flavour convention on
-formatting dates.</p>
-<p>simple and fast.</p>
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p><code>theRefdate</code> provides simple and fast date manipulation
+functions operating on character strings. By default the strings have
+the format <code>&quot;DD.MM.YYYY&quot;</code> (flavour <code>&quot;dmy&quot;</code>),
+exactly as in version 1.0.0. The package does not convert dates to a
+date class, which keeps it simple and fast.</p>
 </div>
-<div id="flavour" class="section level2">
-<h2>flavour</h2>
-<p>Returns the flavour identifier of this package:</p>
+<div id="flavour-and-setflavour" class="section level2">
+<h2>flavour and setFlavour</h2>
+<p>A <em>flavour</em> is the date format the package works with. Three
+flavours exist:</p>
+<table>
+<thead>
+<tr class="header">
+<th>flavour</th>
+<th>format</th>
+<th>example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>&quot;dmy&quot;</code></td>
+<td><code>DD.MM.YYYY</code></td>
+<td><code>&quot;02.02.2002&quot;</code></td>
+</tr>
+<tr class="even">
+<td><code>&quot;iso&quot;</code></td>
+<td><code>YYYY-MM-DD</code></td>
+<td><code>&quot;2002-02-02&quot;</code></td>
+</tr>
+<tr class="odd">
+<td><code>&quot;iso_basic&quot;</code></td>
+<td><code>YYYYMMDD</code></td>
+<td><code>&quot;20020202&quot;</code></td>
+</tr>
+</tbody>
+</table>
+<p>Without any setting the flavour is <code>&quot;dmy&quot;</code>, and every
+function returns the same results as in version 1.0.0.
+<code>flavour()</code> returns the active flavour:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">flavour</span>()</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co">#&gt; [1] &quot;LP&quot;</span></span></code></pre></div>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co">#&gt; [1] &quot;dmy&quot;</span></span></code></pre></div>
+<p><code>setFlavour()</code> selects another flavour for the whole R
+session. Call it once, at the start of a session or in the
+initialization of the code that uses the package. Calling it later with
+a different flavour gives a warning, because two formats in one session
+usually indicate a mistake. The old identifiers <code>&quot;LP&quot;</code> (=
+<code>&quot;dmy&quot;</code>) and <code>&quot;VK&quot;</code> (= <code>&quot;iso&quot;</code>) are
+still accepted.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">setFlavour</span>(<span class="st">&quot;iso&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">jahr</span>(<span class="st">&quot;2002-02-02&quot;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt; [1] 2002</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="fu">dateAddMonths</span>(<span class="st">&quot;2002-02-02&quot;</span>, <span class="dv">11</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt; [1] &quot;2003-01-02&quot;</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="fu">setFlavour</span>(<span class="st">&quot;dmy&quot;</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt; Warning: theRefdate: Flavour wechselt von &#39;iso&#39; auf &#39;dmy&#39; innerhalb der Sitzung</span></span></code></pre></div>
+<p>For a single call the argument <code>format</code> overrides the
+session flavour:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">jahr</span>(<span class="st">&quot;2002-02-02&quot;</span>, <span class="at">format =</span> <span class="st">&quot;iso&quot;</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt; [1] 2002</span></span></code></pre></div>
+</div>
+<div id="errors-instead-of-na" class="section level2">
+<h2>Errors instead of NA</h2>
+<p>Input that is not a date in the active format stops with an error
+that names the argument, its class and value, and the expected format.
+This includes <code>NA</code> and the empty string, for which version
+1.0.0 returned <code>NA</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">jahr</span>(<span class="cn">NA_character_</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co">#&gt; Error: theRefdate: Argument &#39;datumstring&#39; (Klasse &#39;character&#39;, Wert &#39;NA&#39;): enthaelt keine Zahl, erwartet Format TT.MM.JJJJ</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">jahr</span>(<span class="st">&quot;2002-02-02&quot;</span>)   <span class="co"># ISO date while the flavour is &quot;dmy&quot;</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt; Warning in jahr(&quot;2002-02-02&quot;): NAs durch Umwandlung erzeugt</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt; Error: theRefdate: Argument &#39;datumstring&#39; (Klasse &#39;character&#39;, Wert &#39;2002-02-02&#39;): enthaelt keine Zahl, erwartet Format TT.MM.JJJJ</span></span></code></pre></div>
 </div>
 <div id="jahr" class="section level2">
 <h2>jahr</h2>
 <p>Extracts the year as a numeric value:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">jahr</span>(<span class="st">&quot;02.02.2002&quot;</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#&gt; [1] 2002</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">jahr</span>(<span class="st">&quot;02.02.2002&quot;</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="co">#&gt; [1] 2002</span></span></code></pre></div>
 </div>
 <div id="monat" class="section level2">
 <h2>monat</h2>
 <p>Extracts the month as a numeric value:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">monat</span>(<span class="st">&quot;14.06.1789&quot;</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt; [1] 6</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">monat</span>(<span class="st">&quot;14.06.1789&quot;</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co">#&gt; [1] 6</span></span></code></pre></div>
 </div>
 <div id="tag" class="section level2">
 <h2>tag</h2>
 <p>Extracts the day as a numeric value:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">tag</span>(<span class="st">&quot;03.02.2000&quot;</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co">#&gt; [1] 3</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">tag</span>(<span class="st">&quot;03.02.2000&quot;</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="co">#&gt; [1] 3</span></span></code></pre></div>
 </div>
 <div id="datediff" class="section level2">
 <h2>dateDiff</h2>
@@ -379,27 +439,28 @@ formatting dates.</p>
 elements: <code>diffJ</code> (years), <code>diffM</code> (months),
 <code>diffDauer</code> (duration as fraction of years),
 <code>diffDauerM</code> (total months):</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">dateDiff</span>(<span class="st">&quot;01.12.1999&quot;</span>, <span class="st">&quot;01.01.2000&quot;</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>result<span class="sc">$</span>diffJ</span>
-<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&gt; [1] 0</span></span>
-<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>result<span class="sc">$</span>diffM</span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span>
-<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>result<span class="sc">$</span>diffDauer</span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt; [1] 0.08333333</span></span>
-<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>result<span class="sc">$</span>diffDauerM</span>
-<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">dateDiff</span>(<span class="st">&quot;01.12.1999&quot;</span>, <span class="st">&quot;01.01.2000&quot;</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>result<span class="sc">$</span>diffJ</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co">#&gt; [1] 0</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>result<span class="sc">$</span>diffM</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>result<span class="sc">$</span>diffDauer</span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#&gt; [1] 0.08333333</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>result<span class="sc">$</span>diffDauerM</span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co">#&gt; [1] 1</span></span></code></pre></div>
 </div>
 <div id="dateaddmonths" class="section level2">
 <h2>dateAddMonths</h2>
-<p>Adds or subtracts months from a date:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">dateAddMonths</span>(<span class="st">&quot;01.01.2000&quot;</span>,   <span class="dv">1</span>)   <span class="co"># add 1 month</span></span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co">#&gt; [1] &quot;01.02.2000&quot;</span></span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="fu">dateAddMonths</span>(<span class="st">&quot;01.01.2000&quot;</span>,  <span class="sc">-</span><span class="dv">1</span>)   <span class="co"># subtract 1 month</span></span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co">#&gt; [1] &quot;01.12.1999&quot;</span></span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="fu">dateAddMonths</span>(<span class="st">&quot;01.01.2000&quot;</span>,  <span class="dv">12</span>)   <span class="co"># add 1 year</span></span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co">#&gt; [1] &quot;01.01.2001&quot;</span></span>
-<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="fu">dateAddMonths</span>(<span class="st">&quot;01.01.2000&quot;</span>, <span class="sc">-</span><span class="dv">13</span>)   <span class="co"># subtract 13 months</span></span>
-<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co">#&gt; [1] &quot;01.12.1998&quot;</span></span></code></pre></div>
+<p>Adds or subtracts whole months from a date. The day is left unchanged
+and the year is written with four digits:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">dateAddMonths</span>(<span class="st">&quot;01.01.2000&quot;</span>,   <span class="dv">1</span>)   <span class="co"># add 1 month</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="co">#&gt; [1] &quot;01.02.2000&quot;</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="fu">dateAddMonths</span>(<span class="st">&quot;01.01.2000&quot;</span>,  <span class="sc">-</span><span class="dv">1</span>)   <span class="co"># subtract 1 month</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co">#&gt; [1] &quot;01.12.1999&quot;</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="fu">dateAddMonths</span>(<span class="st">&quot;01.01.2000&quot;</span>,  <span class="dv">12</span>)   <span class="co"># add 1 year</span></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co">#&gt; [1] &quot;01.01.2001&quot;</span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="fu">dateAddMonths</span>(<span class="st">&quot;01.01.2000&quot;</span>, <span class="sc">-</span><span class="dv">13</span>)   <span class="co"># subtract 13 months</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt; [1] &quot;01.12.1998&quot;</span></span></code></pre></div>
 </div>
 
 

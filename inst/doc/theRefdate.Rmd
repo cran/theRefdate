@@ -12,20 +12,58 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 library(theRefdate)
 ```
 
-## Overview & Motto
+## Overview
 
-`theRefdate` provides simple date manipulation functions operating on character
-strings in the format `"DD.MM.YYYY"`. All functions follow this `"LP"`-flavour
-convention on formatting dates.
+`theRefdate` provides simple and fast date manipulation functions operating on
+character strings. By default the strings have the format `"DD.MM.YYYY"`
+(flavour `"dmy"`), exactly as in version 1.0.0. The package does not convert
+dates to a date class, which keeps it simple and fast.
 
-simple and fast.
+## flavour and setFlavour
 
-## flavour
+A *flavour* is the date format the package works with. Three flavours exist:
 
-Returns the flavour identifier of this package:
+| flavour       | format         | example        |
+|---------------|----------------|----------------|
+| `"dmy"`       | `DD.MM.YYYY`   | `"02.02.2002"` |
+| `"iso"`       | `YYYY-MM-DD`   | `"2002-02-02"` |
+| `"iso_basic"` | `YYYYMMDD`     | `"20020202"`   |
+
+Without any setting the flavour is `"dmy"`, and every function returns the
+same results as in version 1.0.0. `flavour()` returns the active flavour:
 
 ```{r}
 flavour()
+```
+
+`setFlavour()` selects another flavour for the whole R session. Call it once,
+at the start of a session or in the initialization of the code that uses the
+package. Calling it later with a different flavour gives a warning, because
+two formats in one session usually indicate a mistake. The old identifiers
+`"LP"` (= `"dmy"`) and `"VK"` (= `"iso"`) are still accepted.
+
+```{r}
+setFlavour("iso")
+jahr("2002-02-02")
+dateAddMonths("2002-02-02", 11)
+setFlavour("dmy")
+```
+
+For a single call the argument `format` overrides the session flavour:
+
+```{r}
+jahr("2002-02-02", format = "iso")
+```
+
+## Errors instead of NA
+
+Input that is not a date in the active format stops with an error that names
+the argument, its class and value, and the expected format. This includes `NA`
+and the empty string, for which version 1.0.0 returned `NA`:
+
+```{r, error = TRUE}
+jahr(NA_character_)
+jahr("2002-02-02")   # ISO date while the flavour is "dmy"
 ```
 
 ## jahr
@@ -68,7 +106,8 @@ result$diffDauerM
 
 ## dateAddMonths
 
-Adds or subtracts months from a date:
+Adds or subtracts whole months from a date. The day is left unchanged and
+the year is written with four digits:
 
 ```{r}
 dateAddMonths("01.01.2000",   1)   # add 1 month

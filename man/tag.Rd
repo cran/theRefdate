@@ -2,18 +2,23 @@
 % Please edit documentation in R/theRefdate.R
 \name{tag}
 \alias{tag}
-\title{Funktion 'tag'}
+\title{Function 'tag'}
 \usage{
-tag(datumstring = NA_character_)
+tag(datumstring, format = .zustand$name)
 }
 \arguments{
-\item{datumstring}{Datumsstring im Format "TT.MM.JJJJ"}
+\item{datumstring}{date string in the format of the flavour (default "DD.MM.YYYY")}
+
+\item{format}{flavour; the default is the one set with \code{\link{setFlavour}}}
 }
 \value{
 numeric
 }
 \description{
-Extrahiert die Tageszahl aus uebergebenem Datumsstring als 'numeric'
+Extracts the day from a date string as 'numeric'.
+}
+\details{
+Invalid input, including \code{NA} and the empty string, is an error (version 1.0.0 returned \code{NA}).
 }
 \examples{
 tag("03.02.2000") == 3

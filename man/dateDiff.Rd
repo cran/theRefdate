@@ -4,19 +4,24 @@
 \alias{dateDiff}
 \title{dateDiff}
 \usage{
-dateDiff(frueher = NA_character_, spaeter = NA_character_)
+dateDiff(frueher, spaeter, format = .zustand$name)
 }
 \arguments{
-\item{frueher}{Datum im Format "TT.MM.JJJJ" (frueherer Termin)}
+\item{frueher}{earlier date in the format of the flavour}
 
-\item{spaeter}{Datum im Format "TT.MM.JJJJ" (spaeterer Termin)}
+\item{spaeter}{later date in the format of the flavour}
+
+\item{format}{flavour; the default is the one set with \code{\link{setFlavour}}}
 }
 \value{
-list mit diffJ (Jahre), diffM (Monate), diffDauer (Bruchjahre), diffDauerM (Gesamtmonate)
+list with diffJ (years), diffM (months), diffDauer (duration in fractional years), diffDauerM (total months)
 }
 \description{
-Berechnet die Differenz zwischen zwei Terminen im Format "TT.MM.JJJJ".
-Liefert Jahres-, Monats- und Gesamtdifferenz als benannte Liste.
+Computes the difference between two dates in the format of the flavour.
+Returns the differences in years, months and total months as a named list.
+}
+\details{
+Invalid input, including \code{NA} and the empty string, is an error (version 1.0.0 returned \code{NA}).
 }
 \examples{
 dateDiff("01.01.2000", "01.12.1999")$diffDauerM == -1

@@ -2,18 +2,23 @@
 % Please edit documentation in R/theRefdate.R
 \name{monat}
 \alias{monat}
-\title{Funktion 'monat'}
+\title{Function 'monat'}
 \usage{
-monat(datumstring = NA_character_)
+monat(datumstring, format = .zustand$name)
 }
 \arguments{
-\item{datumstring}{Datumsstring im Format "TT.MM.JJJJ"}
+\item{datumstring}{date string in the format of the flavour (default "DD.MM.YYYY")}
+
+\item{format}{flavour; the default is the one set with \code{\link{setFlavour}}}
 }
 \value{
 numeric
 }
 \description{
-Extrahiert die Monatszahl aus uebergebenem Datumsstring als 'numeric'
+Extracts the month from a date string as 'numeric'.
+}
+\details{
+Invalid input, including \code{NA} and the empty string, is an error (version 1.0.0 returned \code{NA}).
 }
 \examples{
 monat("02.02.2000") == 2
